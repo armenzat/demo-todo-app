@@ -1,0 +1,23 @@
+:root {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #1d2330;
+  background: #f3f5f8;
+}
+body { margin: 0; }
+.app { max-width: 520px; margin: 48px auto; padding: 0 16px; }
+h1 { font-size: 28px; margin: 0 0 20px; }
+.new-todo { display: flex; gap: 8px; }
+.new-todo input { flex: 1; padding: 10px 12px; font-size: 15px; border: 1px solid #cfd5df; border-radius: 6px; }
+button { padding: 8px 12px; font-size: 14px; border: 1px solid #cfd5df; border-radius: 6px; background: #fff; cursor: pointer; }
+button[type="submit"] { background: #2f5bd3; border-color: #2f5bd3; color: #fff; }
+button[aria-pressed="true"] { border-color: #2f5bd3; color: #2f5bd3; font-weight: 600; }
+button:disabled { opacity: 0.5; cursor: default; }
+.empty { color: #5b6577; margin-top: 24px; }
+.todos { list-style: none; padding: 0; margin: 20px 0 0; background: #fff; border: 1px solid #e1e5ec; border-radius: 8px; }
+.todos li { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid #e1e5ec; }
+.todos li:last-child { border-bottom: 0; }
+.todos label { display: flex; gap: 10px; align-items: center; }
+.todos li.done span { text-decoration: line-through; color: #8a93a3; }
+.todos li button { border: 0; font-size: 18px; color: #8a93a3; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-top: 12px; color: #5b6577; font-size: 14px; }
+.toolbar nav { display: flex; gap: 6px; }

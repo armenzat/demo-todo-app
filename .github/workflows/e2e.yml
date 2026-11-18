@@ -1,0 +1,58 @@
+name: E2E
+
+# Runs the Playwright suite on every pull request into development, a release branch or main,
+# on every push to a release branch (release regression), and on demand (e.g. from Testomat.io).
+on:
+  pull_request:
+    branches: [development, "release-*", main]
+  push:
+    branches: ["release-*"]
+  workflow_dispatch:
+    inputs:
+      grep:
+        description: "Only run tests matching this pattern (e.g. @smoke)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+  pull-requests: write # Testomat.io posts its run summary as a PR comment
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  playwright:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TESTOMATIO: ${{ secrets.TESTOMATIO }}
+      TESTOMATIO_ENV: "Chrome,Linux"
+      # Run title: PR number + branch for pull requests, "Regression <branch>" for release pushes.
+      TESTOMATIO_TITLE: ${{ github.event_name == 'pull_request' && format('PR #{0} · {1}', github.event.number, github.head_ref) || format('Regression · {0} · {1}', github.ref_name, github.sha) }}
+      # Every run on or into a release branch lands in that release's run group.
+      TESTOMATIO_RUNGROUP_TITLE: ${{ startsWith(github.base_ref || github.ref_name, 'release-') && (github.base_ref || github.ref_name) || '' }}
+      GH_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('pnpm-lock.yaml') }}
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Run Playwright
+        run: pnpm exec playwright test ${{ inputs.grep && format('--grep "{0}"', inputs.grep) || '' }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
