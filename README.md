@@ -26,3 +26,10 @@ Set `TESTOMATIO=<project key>` to send a local run to Testomat.io.
 `.github/workflows/e2e.yml` runs the suite on pull requests into `development`, `release-*` and `main`,
 on pushes to `release-*`, and on demand. Results go to Testomat.io (secret `TESTOMATIO`); runs on or into
 a release branch are grouped under that release.
+
+## Release process
+
+1. Feature PRs merge into `development` once the `playwright` check passes.
+2. At release cut, `release-1.0.N` is branched from `development`; the regression run is grouped under that release in Testomat.io.
+3. QA runs the manual cases against the release build in the same release group; fixes go to the release branch via PR.
+4. After sign-off, the release branch merges into `main`, gets the tag `v1.0.N`, and merges back into `development`.
