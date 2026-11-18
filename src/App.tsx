@@ -56,7 +56,7 @@ export function App() {
 
           <footer className="toolbar">
             <span data-testid="remaining">
-              {remaining} {remaining === 1 ? "item" : "items"} left
+              {remaining} {remaining === 1 ? "task" : "tasks"} remaining
             </span>
             <nav aria-label="Filter">
               {FILTERS.map((f) => (
