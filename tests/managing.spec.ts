@@ -1,34 +1,8 @@
-import { test, expect, type Page } from "@playwright/test";
-
-const newTodo = (page: Page) => page.getByRole("textbox", { name: "New todo" });
-const todoItems = (page: Page) => page.getByRole("list", { name: "Todos" }).getByRole("listitem");
-
-async function addTodos(page: Page, ...titles: string[]) {
-  for (const title of titles) {
-    await newTodo(page).fill(title);
-    await newTodo(page).press("Enter");
-  }
-}
+import { test, expect } from "@playwright/test";
+import { addTodos, todoItems } from "./helpers";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("./");
-});
-
-test.describe("Adding todos", () => {
-  test("shows an empty state before any todo is added @smoke @T8ba46a35", async ({ page }) => {
-    await expect(page.getByText("Nothing to do yet")).toBeVisible();
-  });
-
-  test("adds a todo with Enter @smoke @T1a9ffaea", async ({ page }) => {
-    await addTodos(page, "Buy milk");
-    await expect(todoItems(page)).toHaveText(["Buy milk×"]);
-    await expect(newTodo(page)).toHaveValue("");
-  });
-
-  test("ignores blank input @T04ffced7", async ({ page }) => {
-    await addTodos(page, "   ");
-    await expect(page.getByText("Nothing to do yet")).toBeVisible();
-  });
 });
 
 test.describe("Managing todos", () => {
