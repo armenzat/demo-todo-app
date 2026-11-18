@@ -30,7 +30,7 @@ jobs:
       TESTOMATIO: ${{ secrets.TESTOMATIO }}
       TESTOMATIO_ENV: "Chrome,Linux"
       # Run title: PR number + branch for pull requests, "Regression <branch>" for release pushes.
-      TESTOMATIO_TITLE: ${{ github.event_name == 'pull_request' && format('PR #{0} · {1}', github.event.number, github.head_ref) || format('Regression · {0} · {1}', github.ref_name, github.sha) }}
+      TESTOMATIO_TITLE: "${{ github.event_name == 'pull_request' && format('PR #{0} · {1}', github.event.number, github.head_ref) || format('Regression · {0} · {1}', github.ref_name, github.sha) }}"
       # Every run on or into a release branch lands in that release's run group.
       TESTOMATIO_RUNGROUP_TITLE: ${{ startsWith(github.base_ref || github.ref_name, 'release-') && (github.base_ref || github.ref_name) || '' }}
       GH_PAT: ${{ secrets.GITHUB_TOKEN }}
